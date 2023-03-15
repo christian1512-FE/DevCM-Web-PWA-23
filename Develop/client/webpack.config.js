@@ -14,7 +14,7 @@ module.exports = () => {
       install: './src/js/install.js'
     },
     output: {
-      filename: 'bundle.js',
+      filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
     // TODO: Add and configure workbox plugins for a service worker and manifest file.
@@ -22,21 +22,27 @@ module.exports = () => {
     plugins: [
       new HtmlWebpackPlugin({     //PLUGINS
         template: './index.html',
-        title: 'Webpack Plugin'
+        title: 'JATE'
       }),
 
-      new InjectManifest(),       
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
+      }),
+
       new WebpackPwaManifest({
-        name: 'TODOs',
-        short_name: 'TODOs',
-        description: 'Keep track of important tasks!',
-        background_color: '#7eb4e2',
-        theme_color: '#7eb4e2',
-        start_url: './',
-        publicPath: './',
+        fingerprints: false,
+        inject: true,
+        name: 'Just Another Text Editor',
+        short_name: 'Jate',
+        description: 'Jade Text editor!',
+        background_color: '#a9a9a9',
+        theme_color: '#a9a9a9',
+        start_url: '/',
+        publicPath: '/',
         icons: [
           {
-            src: path.resolve('assets/images/logo.png'),
+            src: path.resolve('src/images/logo.png'),
             sizes: [96, 128, 192, 256, 384, 512],
             destination: path.join('assets', 'icons'),
           },
@@ -56,11 +62,12 @@ module.exports = () => {
         //how we use webpack to use babel
         {
           test: /\.m?js$/,
-          exclude: /(node_modules|bower_components)/,
+          exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env']
+              presets: ['@babel/preset-env'],
+              plugins:['@babel/plugin-proposal-object-rest-spread','@babel/transform-runtime']
             }
           }
         },
