@@ -14,11 +14,34 @@ module.exports = () => {
       install: './src/js/install.js'
     },
     output: {
-      filename: '[name].bundle.js',
+      filename: 'bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
+    // TODO: Add and configure workbox plugins for a service worker and manifest file.
+    //PLUGINS class example #09, & #26
     plugins: [
+      new HtmlWebpackPlugin({     //PLUGINS
+        template: './index.html',
+        title: 'Webpack Plugin'
+      }),
 
+      new InjectManifest(),       
+      new WebpackPwaManifest({
+        name: 'TODOs',
+        short_name: 'TODOs',
+        description: 'Keep track of important tasks!',
+        background_color: '#7eb4e2',
+        theme_color: '#7eb4e2',
+        start_url: './',
+        publicPath: './',
+        icons: [
+          {
+            src: path.resolve('assets/images/logo.png'),
+            sizes: [96, 128, 192, 256, 384, 512],
+            destination: path.join('assets', 'icons'),
+          },
+        ],
+      })
     ],
 
     // TODO: Add CSS loaders and babel to webpack.
